@@ -127,7 +127,8 @@
               }}
             >
               {@const path = item.values["path"]}
-              {getDisplayName(isString(path) ? path : item.id)}
+              {#if item.values["icon"]}{item.values["icon"]}
+              {/if}{getDisplayName(isString(path) ? path : item.id)}
             </InternalLink>
           {:else}
             <CardMetadata fields={[customHeader]} record={item} />
