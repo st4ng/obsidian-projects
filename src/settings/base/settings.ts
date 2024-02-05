@@ -144,6 +144,7 @@ export interface FilterCondition {
 export type StringFieldConfig = {
   options?: string[];
   richText?: boolean;
+  hideLabel?: boolean;
 };
 
 export type FieldConfig = StringFieldConfig;

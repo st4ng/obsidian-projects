@@ -19,9 +19,11 @@
   {@const value = record.values[field.name]}
   {#if value !== undefined && value !== null}
     <div class="field-label">
-      <div class="setting-item-description" style:margin-bottom={"4px"}>
-        {field.name}
-      </div>
+      {#if !field.typeConfig?.hideLabel}
+        <div class="setting-item-description" style:margin-bottom={"4px"}>
+          {field.name}
+        </div>
+      {/if}
       {#if field.repeated}
         {#if field.type === DataFieldType.String}
           <Tags {field} {value} />

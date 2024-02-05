@@ -64,6 +64,16 @@
     };
   }
 
+  function handleHideLabelChange({ detail: hideLabel }: CustomEvent<boolean>) {
+    field = {
+      ...field,
+      typeConfig: {
+        ...field.typeConfig,
+        hideLabel,
+      },
+    };
+  }
+
   $: options = [
     { label: $i18n.t("data-types.string"), value: DataFieldType.String },
     { label: $i18n.t("data-types.number"), value: DataFieldType.Number },
@@ -127,6 +137,15 @@
         />
       </SettingItem>
     {/if}
+    <SettingItem
+      name={$i18n.t("modals.field.configure.hide-label.name")}
+      description={$i18n.t("modals.field.configure.hide-label.description")}
+    >
+      <Switch
+        checked={field.typeConfig?.hideLabel ?? false}
+        on:check={handleHideLabelChange}
+      />
+    </SettingItem>
   </ModalContent>
   <ModalButtonGroup>
     <Button

@@ -230,6 +230,10 @@
                         "name": "Enable rich text formatting",
                         "description": "For fields with Markdown content."
                     },
+                    "hide-label": {
+                        "name": "Hide label",
+                        "description": "Hide label of this field in board cards."
+                    },
                     "save": "Save"
                 },
                 "create": {
