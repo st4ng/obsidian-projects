@@ -13,6 +13,7 @@
     getRecordColorContext,
     sortRecordsContext,
   } from "src/ui/views/helpers";
+  import { tick } from "svelte";
   import {
     SHADOW_ITEM_MARKER_PROPERTY_NAME,
     TRIGGERS,
@@ -59,6 +60,9 @@
     if (dragItem) {
       onDrop(dragItem, items, detail.info.trigger as DropTrigger);
       dragItem = undefined;
+      tick().then(() => {
+        window.dispatchEvent(new CustomEvent("projects:board:drop-card"));
+      });
     }
   }
 

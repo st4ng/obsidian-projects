@@ -9,6 +9,7 @@ import type { DataRecord } from "src/lib/dataframe/dataframe";
 import { customViews } from "src/lib/stores/customViews";
 import type { ViewApi } from "src/lib/viewApi";
 import type { ProjectDefinition, ViewDefinition } from "src/settings/settings";
+import { tick } from "svelte";
 
 export interface ViewProps {
   view: ViewDefinition;
@@ -60,6 +61,14 @@ export function useView(node: HTMLElement, props: ViewProps) {
       }
 
       viewId = newprops.view.id;
+
+      tick().then(() => {
+        window.dispatchEvent(
+          new CustomEvent("projects:views:change", {
+            detail: { id: viewId, name: newprops.view.name },
+          })
+        );
+      });
     } else {
       projectView?.onData(newprops.dataProps);
     }

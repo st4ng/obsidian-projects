@@ -18,7 +18,7 @@
 {#each fields as field (field.name)}
   {@const value = record.values[field.name]}
   {#if value !== undefined && value !== null}
-    <div class="field-label">
+    <div class="field-label" data-property-key="{field.name}">
       {#if !field.typeConfig?.hideLabel}
         <div class="setting-item-description" style:margin-bottom={"4px"}>
           {field.name}
