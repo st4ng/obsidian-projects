@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { InternalLink, Checkbox } from "obsidian-svelte";
+  import type { App } from "obsidian";
+  import { Checkbox, InternalLink } from "obsidian-svelte";
   import {
     isString,
     type DataField,
@@ -23,8 +24,8 @@
   import { getDisplayName } from "./boardHelpers";
   import type {
     DropTrigger,
-    OnRecordClick,
     OnRecordCheck,
+    OnRecordClick,
     OnRecordDrop,
   } from "./types";
 
@@ -68,6 +69,43 @@
 
   const isPlaceholder = (item: DataRecord) =>
     !!(item as any)[SHADOW_ITEM_MARKER_PROPERTY_NAME];
+
+  export const isUrl = (value: string): boolean => {
+    try {
+      new URL(value);
+    } catch {
+      return false;
+    }
+    return true;
+  };
+
+  export const resolveFileLink = (
+    app: App,
+    markdownLink: string,
+    sourcePath: string
+  ): string | null => {
+    const matches = /^\[\[(.*?)\]\]$/.exec(markdownLink);
+    if (matches) {
+      const resource = app.metadataCache.getFirstLinkpathDest(
+        matches[1]!,
+        sourcePath
+      );
+      if (resource) {
+        return app.vault.getResourcePath(resource);
+      }
+    }
+
+    return null;
+  };
+
+  const getCover = (item: DataRecord): string | null => {
+    let value = item.values["cover"] as string | undefined;
+    if (typeof value == "string") {
+      value =
+        resolveFileLink($app, value, item.values["path"] as string) ?? value;
+    }
+    return value && isUrl(value) ? value : null;
+  };
 </script>
 
 <div
@@ -90,6 +128,7 @@
 >
   {#each items as item (item.id)}
     {@const color = getRecordColor(item)}
+    {@const cover = getCover(item)}
 
     <article
       class="projects--board--card"
@@ -138,6 +177,9 @@
             <CardMetadata fields={[customHeader]} record={item} />
           {/if}
         </div>
+        {#if cover}
+          <img src={cover} style:object-fit="cover" alt="Cover" />
+        {/if}
         <CardMetadata fields={includeFields} record={item} />
       </ColorItem>
     </article>
